@@ -2,13 +2,8 @@
 ---
 services:
   telegram_youtube_bot:
-    build:
-      context: .
-      dockerfile: telegram_youtube_bot/Dockerfile
-      args:
-        - PUID=${PUID}
-        - PGID=${PGID}
-    container_name: ${STACK_PREFIX}_telegram_bot
+    build: ./telegram_youtube_bot
+    args: [PUID=${PUID}, PGID=${PGID}]
     user: "${PUID}:${PGID}"
     restart: unless-stopped
     environment:
@@ -20,19 +15,12 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-      # Google Drive integration
-      - GOOGLE_DRIVE_COOKIES_FILE_ID=${GOOGLE_DRIVE_COOKIES_FILE_ID}
-      - GOOGLE_DRIVE_SERVICE_ACCOUNT=${GOOGLE_DRIVE_SERVICE_ACCOUNT}
-      - GOOGLE_DRIVE_REFRESH_INTERVAL=${GOOGLE_DRIVE_REFRESH_INTERVAL}
     volumes:
       - input:/input
       - metadata:/metadata
-      - cookies:/cookies:rw    # <--- Use named volume, not host path, for permissions
+      - cookies:/cookies:rw
     networks:
       - backend
-    depends_on:
-      volume-init:
-        condition: service_completed_successfully
 
 volumes:
   input:
@@ -40,4 +28,8 @@ volumes:
   metadata:
     external: true
   cookies:
+    external: true
+
+networks:
+  backend:
     external: true
