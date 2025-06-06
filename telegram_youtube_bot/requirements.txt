@@ -1,0 +1,8 @@
+python-telegram-bot==20.7
+yt-dlp
+mutagen
+musicbrainzngs
+rapidfuzz
+pydrive2
+python-dotenv
+requests
